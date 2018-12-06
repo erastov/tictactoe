@@ -19,7 +19,7 @@ class GameStarter(telepot.helper.ChatHandler):
         super(GameStarter, self).__init__(*args, **kwargs)
 
     def on_chat_message(self, msg):
-        content_type, chat_type, chat_id = telepot.glance(msg)
+        # content_type, chat_type, chat_id = telepot.glance(msg)
         self.sender.sendMessage(
             'Давай сыграем ...',
             reply_markup=InlineKeyboardMarkup(
@@ -128,7 +128,7 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
 
     def on__idle(self, event):
         self.editor.editMessageText(
-            'Слишком долго думаешь!',
+            'Слишком долго думаешь :(\nЯ пошёл!',
             reply_markup=None)
         time.sleep(5)
         self.editor.deleteMessage()
