@@ -73,7 +73,7 @@ def get_child(key, tree, parent, middle=False):
 
 
 def middle_child(tree, parent):
-    get_child('score', tree, parent, True)
+    return get_child('score', tree, parent, True)
 
 
 def best_child(tree, parent):
