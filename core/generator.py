@@ -117,7 +117,7 @@ def get_tree():
 
 
 def insert_db(tree):
-    conn = sqlite3.connect('/Users/f.erastov/PycharmProjects/YTCF/sqlite.db')
+    conn = sqlite3.connect('sqlite.db')
     c = conn.cursor()
     sql = 'INSERT INTO tree (id,value,children,parent, result, score, anti_score) VALUES (?, ?, ?, ?, ?, ?, ?)'
     for ide, node in tree.items():
