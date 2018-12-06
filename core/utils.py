@@ -62,29 +62,29 @@ def search_node(tree, children, matrix):
             return child, changes
 
 
-def get_child(key, tree, parent, middle=False):
+def get_child(key, tree, parent, coefficient=None):
     children_scores = [(child, tree[child][key]) for child in tree[parent]['children']]
-    if not middle:
+    if not coefficient:
         return max(children_scores, key=lambda child: child[1])[0]
     else:
         if len(children_scores) == 1:
             return children_scores[0][0]
         sort_list = sorted(children_scores, key=lambda child: child[1], reverse=True)
         delta_top = sort_list[0][1] - sort_list[1][1]
-        if delta_top > 7:
+        if delta_top > coefficient:
             return sort_list[0][0]
         return sort_list[1][0]
 
 
 def middle_child(tree, parent):
-    return get_child('anti_score', tree, parent, True)
-
-
-def best_child(tree, parent):
-    return get_child('score', tree, parent)
+    return get_child('anti_score', tree, parent, 6)
 
 
 def worst_child(tree, parent):
+    return get_child('anti_score', tree, parent, 8)
+
+
+def best_child(tree, parent):
     return get_child('anti_score', tree, parent)
 
 

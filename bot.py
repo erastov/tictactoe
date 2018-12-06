@@ -129,13 +129,13 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
             self._changes = None
             self._show_menu()
         elif query_data == 'easy':
-            self._get_children = best_child
+            self._get_children = worst_child
             self._show_next_state('Ты ходишь:')
         elif query_data == 'normal':
             self._get_children = middle_child
             self._show_next_state('Ты ходишь:')
         elif query_data == 'hard':
-            self._get_children = worst_child
+            self._get_children = best_child
             self._show_next_state('Ты ходишь:')
         else:
             ok = self._new_state(query_data)
