@@ -62,9 +62,18 @@ def search_node(tree, children, matrix):
             return child, changes
 
 
-def get_child(key, tree, parent):
+def get_child(key, tree, parent, middle=False):
     children_scores = [(child, tree[child][key]) for child in tree[parent]['children']]
-    return max(children_scores, key=lambda child: child[1])[0]
+    if not middle:
+        return max(children_scores, key=lambda child: child[1])[0]
+    else:
+        if len(children_scores) == 1:
+            return children_scores[0][0]
+        return sorted(children_scores, key=lambda child: child[1])[1][0]
+
+
+def middle_child(tree, parent):
+    get_child('score', tree, parent, True)
 
 
 def best_child(tree, parent):
