@@ -151,7 +151,7 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
 
     def on__idle(self, event):
         self.editor.editMessageText(
-            'Слишком долго думаешь :(\nЯ пошёл!',
+            'Слишком долго думаешь :(\nЯ пошёл 👋',
             reply_markup=None)
         time.sleep(5)
         self.editor.deleteMessage()
