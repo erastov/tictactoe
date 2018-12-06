@@ -69,11 +69,17 @@ def get_child(key, tree, parent, middle=False):
     else:
         if len(children_scores) == 1:
             return children_scores[0][0]
-        return sorted(children_scores, key=lambda child: child[1])[1][0]
+        sort_list = sorted(children_scores, key=lambda child: child[1], reverse=True)
+        delta_top = sort_list[0][1] - sort_list[1][1]
+        print(sort_list)
+        print(delta_top)
+        # if delta_top > 5:
+        #     return sort_list[0][0]
+        return sort_list[1][0]
 
 
 def middle_child(tree, parent):
-    return get_child('score', tree, parent, True)
+    return get_child('anti_score', tree, parent, True)
 
 
 def best_child(tree, parent):
@@ -97,7 +103,7 @@ def check_end(matrix):
             return matrix[0][j]
     if equal([matrix[0][0], matrix[1][1], matrix[2][2]]) and matrix[0][0] != 0:
         return matrix[0][0]
-    if equal([matrix[0][2], matrix[1][1], matrix[2][0]]) and matrix[0][0] != 0:
+    if equal([matrix[0][2], matrix[1][1], matrix[2][0]]) and matrix[0][2] != 0:
         return matrix[0][2]
 
 
