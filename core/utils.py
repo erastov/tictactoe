@@ -1,3 +1,10 @@
+import random
+
+
+def main():
+    pass
+
+
 def rotate(array):
     return [list(i) for i in zip(*array[::-1])]
 
@@ -51,10 +58,6 @@ def normilize(changes, matrix):
     return [row[:] for row in matrix]
 
 
-def main():
-    pass
-
-
 def search_node(tree, children, matrix):
     for child in children:
         match, changes = check(matrix, tree[child]['value'])
@@ -73,7 +76,7 @@ def get_child(key, tree, parent, coefficient=None):
         delta_top = sort_list[0][1] - sort_list[1][1]
         if delta_top > coefficient:
             return sort_list[0][0]
-        return sort_list[1][0]
+        return random.choice(sort_list[:2])[0]
 
 
 def middle_child(tree, parent):
