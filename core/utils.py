@@ -71,10 +71,8 @@ def get_child(key, tree, parent, middle=False):
             return children_scores[0][0]
         sort_list = sorted(children_scores, key=lambda child: child[1], reverse=True)
         delta_top = sort_list[0][1] - sort_list[1][1]
-        print(sort_list)
-        print(delta_top)
-        # if delta_top > 5:
-        #     return sort_list[0][0]
+        if delta_top > 9:
+            return sort_list[0][0]
         return sort_list[1][0]
 
 
