@@ -72,8 +72,6 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
     def _bot_answer(self):
         if self._has_human_children:
             self._bot_node = self._get_children(self._tree, self._human_node)
-            if self._bot_node == 2088:
-                self._bot_node = 2089
             self._matrix = normilize(self._changes, self._tree[self._bot_node]['value'])
         else:
             self._stop = True
