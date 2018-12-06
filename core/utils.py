@@ -48,7 +48,7 @@ def check(standard, matrix):
 def normilize(changes, matrix):
     for change in changes:
         matrix = tool(change)(matrix)
-    return matrix
+    return [row[:] for row in matrix]
 
 
 def main():
