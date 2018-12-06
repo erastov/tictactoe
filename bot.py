@@ -119,6 +119,11 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
                 self._counter += 1
                 self._show_next_state('Нормально сделай ход ({}):'.format(self._counter))
         else:
+            self._stop = False
+            self._matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+            self._bot_node = 0
+            self._human_node = None
+            self._changes = None
             self._show_next_state('Ты ходишь:')
 
     def on__idle(self, event):
