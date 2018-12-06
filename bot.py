@@ -24,7 +24,7 @@ class GameStarter(telepot.helper.ChatHandler):
             'Давай сыграем ...',
             reply_markup=InlineKeyboardMarkup(
                 inline_keyboard=[[
-                    InlineKeyboardButton(text='СТАРТ', callback_data='start'),
+                    InlineKeyboardButton(text='ИГРАТЬ', callback_data='start'),
                 ]]
             )
         )
@@ -117,7 +117,7 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
                 self._show_next_state('Ты ходишь:')
             else:
                 self._counter += 1
-                self._show_next_state('Нормально сделай ход ({}):'.format(self._counter))
+                self._show_next_state('Ты слепой? ({}):'.format(self._counter))
         else:
             self._stop = False
             self._matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
