@@ -6,12 +6,12 @@ from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.delegate import (
     per_chat_id, per_callback_query_origin, create_open, pave_event_space)
-from core.utils import normilize, check, worst_child, search_node, best_child, get_child, check_end
+from core.utils import normilize, check, worst_child, search_node, best_child, check_end, middle_child
 from core.generator import get_tree_db
 
 
 ICONS = ['-', '⭕️', '❌']
-MESSAGES = ['Ничья', ' Ты выиграл :(', 'Я выиграл :)']
+MESSAGES = ['Ничья :|', ' Ты выиграл :(', 'Я выиграл :)']
 
 
 class GameStarter(telepot.helper.ChatHandler):
@@ -33,13 +33,14 @@ class GameStarter(telepot.helper.ChatHandler):
 
 class Gamer(telepot.helper.CallbackQueryOriginHandler):
 
-    _tree = None
-    _matrix = None
-    _bot_node = None
-    _human_node = None
-    _changes = None
-    _stop = False
-    _counter = 0
+    _tree: dict = None
+    _matrix: list = None
+    _bot_node: int = None
+    _human_node: int = None
+    _changes: list = None
+    _stop: bool = False
+    _counter: int = 0
+    _get_children: callable = None
 
     def __init__(self, *args, **kwargs):
         super(Gamer, self).__init__(*args, **kwargs)
@@ -70,21 +71,33 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
 
     def _bot_answer(self):
         if self._has_human_children:
-            self._bot_node = worst_child(self._tree, self._human_node)
+            self._bot_node = self._get_children(self._tree, self._human_node)
             if self._bot_node == 2088:
                 self._bot_node = 2089
             self._matrix = normilize(self._changes, self._tree[self._bot_node]['value'])
         else:
             self._stop = True
 
+    def _show_menu(self):
+        self.editor.editMessageText(
+            'Выбери режим:',
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[[
+                    InlineKeyboardButton(text='Легко', callback_data='easy'),
+                    InlineKeyboardButton(text='Нормально', callback_data='normal'),
+                    InlineKeyboardButton(text='Тяжело ;)', callback_data='hard'),
+                ]]
+            )
+        )
+
     def _show_next_state(self, message=None):
         winner = self._winner
         stop = self._stop
         if stop or winner:
-            if stop:
-                message = MESSAGES[0]
-            else:
+            if winner:
                 message = MESSAGES[winner]
+            else:
+                message = MESSAGES[0]
             self.editor.editMessageText(
                 message,
                 reply_markup=InlineKeyboardMarkup(
@@ -108,23 +121,33 @@ class Gamer(telepot.helper.CallbackQueryOriginHandler):
 
     def on_callback_query(self, msg):
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-        if query_data != 'start':
-            ok = self._new_state(query_data)
-            if ok:
-                self._counter = 0
-                self._show_next_state('Я хожу:')
-                self._bot_answer()
-                self._show_next_state('Ты ходишь:')
-            else:
-                self._counter += 1
-                self._show_next_state('Ты слепой? ({}):'.format(self._counter))
-        else:
+        if query_data == 'start':
             self._stop = False
             self._matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
             self._bot_node = 0
             self._human_node = None
             self._changes = None
+            self._show_menu()
+        elif query_data == 'easy':
+            self._get_children = best_child
             self._show_next_state('Ты ходишь:')
+        elif query_data == 'normal':
+            self._get_children = middle_child
+            self._show_next_state('Ты ходишь:')
+        elif query_data == 'hard':
+            self._get_children = worst_child
+            self._show_next_state('Ты ходишь:')
+        else:
+            ok = self._new_state(query_data)
+            if ok:
+                self._counter = 0
+                self._show_next_state('Я хожу:')
+                if not (self._stop or self._winner):
+                    self._bot_answer()
+                    self._show_next_state('Ты ходишь:')
+            else:
+                self._counter += 1
+                self._show_next_state('Ты слепой? ({}):'.format(self._counter))
 
     def on__idle(self, event):
         self.editor.editMessageText(
